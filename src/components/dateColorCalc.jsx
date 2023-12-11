@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react'
 
 function DateColorCalc  ()  {
 
-const [firstDate, setFirstDate] = useState(new Date())
-  const [secondDate, setSecondDate] = useState(new Date())
-  const [dateDifference, setDateDifference] = useState('')
-  const [lastDateChange, setLastDateChange] = useState('')
+const currentTimeAndDate = new Date().toISOString().slice(0, 16)
+
+const [firstDate, setFirstDate] = useState(currentTimeAndDate)
+    const [secondDate, setSecondDate] = useState(currentTimeAndDate)
+    const [dateDifference, setDateDifference] = useState('')
+    const [previousDateChange, setPreviousDateChange] = useState('')
 
     const [bgColor, setBgColor] = useState('#ffffff')
     const [textColor, setTextColor] = useState('#000000')
-    const [lastColorChange, setLastColorChange] = useState('')
+    const [previousColorChange, setPreviousColorChange] = useState('')
 
   useEffect(() => {
     checkDateDiff()
@@ -35,13 +37,14 @@ const [firstDate, setFirstDate] = useState(new Date())
       const years = Math.floor(months / 12)
 
       setDateDifference(
-        `Difference: ${years} years, ${months % 12} months, ${days % 30} days, ${hours % 24} hours, ${minutes % 60} minutes, ${seconds % 60} seconds`
+        `Your time difference: 
+         ${years} years, ${months % 12} months, ${days % 30} days, ${hours % 24} hours, ${minutes % 60} minutes and ${seconds % 60} seconds`
       )
 
-      setLastDateChange(`Last Change: ${new Date().toLocaleString()}`)
-    } else {
-      setDateDifference('Invalid dates')
-    }
+      setPreviousDateChange(`Previous Change: ${new Date().toLocaleString()}`)
+    } 
+    else setDateDifference('Invalid dates')
+    
   }
 
   const updateColors = () => {
@@ -49,26 +52,38 @@ const [firstDate, setFirstDate] = useState(new Date())
       document.body.style.backgroundColor = bgColor
       document.body.style.color = textColor
 
-      setLastColorChange(`Last Change: ${new Date().toLocaleString()}`)
+      setPreviousColorChange(`Last Change: ${new Date().toLocaleString()}`)
     }
-      setLastColorChange('Background and text colors cannot be the same.')
+    else setPreviousColorChange('Background and text colors cannot be the same.')
 
   }
 
   return (
     <div>
-      <h2>Date Calculator</h2>
+      <h1>Date Difference Calculator</h1>
       <form>
-        <label>Date 1:</label>
-        <input type="time" value={firstDate} onChange={(e) => setFirstDate(e.target.value)} />
-
-        <label>Date 2:</label>
-        <input type="tim" value={secondDate} onChange={(e) => setSecondDate(e.target.value)} />
+        <label>Date 1: </label>
+        <input type="datetime-local" value={firstDate} onChange={(e) => setFirstDate(e.target.value)} />
+        <br />
+        <br/>
+        <label>Date 2: </label>
+        <input type="datetime-local" value={secondDate} onChange={(e) => setSecondDate(e.target.value)} />
 
         <p>{dateDifference}</p>
-        <p>{lastDateChange}</p>
+        <p>{previousDateChange}</p>
       </form>
 
+      <h1> Page Color Picker</h1>
+      <form>
+        <label>Background Color: </label>
+        <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value) } />
+        <br />
+        <br />
+        <label>Text Color: </label>
+        <input type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} />
+
+        <p>{previousColorChange}</p>
+      </form>
     </div>
   )
 }
